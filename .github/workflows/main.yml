@@ -1,35 +1,32 @@
-name: OWASP Dependency Check
+name: dependency-check
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
-  dependency-check:
+  scan:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
+      - name: Set up Java
+        uses: actions/setup-java@v3
         with:
-          distribution: temurin
-          java-version: 17
+          distribution: 'temurin'
+          java-version: '11'
 
-      - name: OWASP Dependency Check
-        uses: dependency-check/Dependency-Check_Action@main
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@v3
         with:
           project: "NodeGoat"
-          path: "."
+          path: "./"
           format: "HTML"
-          out: "reports"
+          out: "./reports"
 
       - name: Upload report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: dependency-check-report
-          path: reports
+          path: reports/
